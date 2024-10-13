@@ -25,6 +25,7 @@ export const Landing = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isTicketOpen, onOpen: onTicketOpen, onClose: onTicketClose } = useDisclosure();
 
+  const [token, setToken] = useState();
   const [errorMessage, setErrorMessage] = useState("");
   const [ticketsCount, setTicketsCount] = useState();
   const [ticketLink, setTicketLink] = useState("");
@@ -39,6 +40,22 @@ export const Landing = () => {
     autoplay: true,
     animationData: ticket,
   };
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/get-token", {
+          method: "POST",
+        });
+        const data = await res.json();
+        if (res.ok) setToken(data.token);
+      } catch (error) {
+        console.error("Error fetching token:", error);
+      }
+    };
+
+    fetchToken();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,9 +81,11 @@ export const Landing = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(newTicket),
       });
+
       const data = await res.json();
 
       if (res.status === 200 && data) {
