@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Button, Flex, Heading } from "@chakra-ui/react";
 import { IoTicketOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -14,15 +14,6 @@ export const Navbar = () => {
           <Heading>Tickets</Heading>
         </Flex>
       </Link>
-
-      <Flex align="center" gap="32px" fontSize="18px" mr="100px">
-        <Link to="/">
-          <Text _hover={{ color: "purple.lighter" }}>Home</Text>
-        </Link>
-        <Link to="/tickets">
-          <Text _hover={{ color: "purple.lighter" }}>Tickets</Text>
-        </Link>
-      </Flex>
 
       {!isAuthenticated ? (
         <Button variant="unstyled" fontSize="18px" onClick={() => loginWithPopup()}>

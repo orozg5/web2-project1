@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "./layouts/Layout";
 import { Landing } from "./pages/Landing";
 import { NotFound } from "./pages/NotFound";
-import { Tickets } from "./pages/Tickets";
 import { Ticket } from "./pages/Ticket";
 
 export const App = () => {
@@ -11,7 +10,6 @@ export const App = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Landing />} />
-          <Route path="/tickets" element={<Tickets />} />
           <Route path="/tickets/:id" element={<Ticket />} />
         </Route>
         <Route path="/*" element={<NotFound />} />

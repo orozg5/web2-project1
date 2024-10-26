@@ -22,6 +22,9 @@ import { QRCodeSVG } from "qrcode.react";
 import { Link } from "react-router-dom";
 
 export const Landing = () => {
+  const urlBack = "https://goroz-w2p1-back.onrender.com";
+  const urlFront = "https://goroz-w2p1-front.onrender.com";
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isTicketOpen, onOpen: onTicketOpen, onClose: onTicketClose } = useDisclosure();
 
@@ -44,7 +47,7 @@ export const Landing = () => {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/get-token", {
+        const res = await fetch(`${urlBack}/api/get-token`, {
           method: "POST",
         });
         const data = await res.json();
@@ -60,9 +63,9 @@ export const Landing = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/ticket");
+        const res = await fetch(`${urlBack}/api/ticket-amount`);
         const data = await res.json();
-        setTicketsCount(data.length);
+        setTicketsCount(data);
       } catch (err) {
         console.error(err);
       }
@@ -77,7 +80,7 @@ export const Landing = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/ticket", {
+      const res = await fetch(`${urlBack}/api/ticket`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +93,7 @@ export const Landing = () => {
 
       if (res.status === 200 && data) {
         onClose();
-        setTicketLink(`http://localhost:5173/tickets/${data.id}`);
+        setTicketLink(`${urlFront}/tickets/${data.id}`);
         onTicketOpen();
       } else {
         setErrorMessage(data.error);

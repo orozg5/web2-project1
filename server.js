@@ -8,11 +8,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const port = 8080;
+const port = parseInt(process.env.PORT) || 8080;
 
 const err500 = "Something went wrong on the server!";
 const err400_1 = "All fields are required!";
 const err400_2 = "The maximum amount of tickets (3) have already been purchased for this Vatin (OIB)!";
+
+const urlFront = "https://goroz-w2p1-front.onrender.com";
 
 const jwtCheck = expressjwt({
   secret: jwksRsa.expressJwtSecret({
@@ -21,7 +23,7 @@ const jwtCheck = expressjwt({
     jwksRequestsPerMinute: 5,
     jwksUri: `https://goroz.eu.auth0.com/.well-known/jwks.json`,
   }),
-  audience: "http://localhost:5173/",
+  audience: `${urlFront}/`,
   issuer: `https://goroz.eu.auth0.com/`,
   algorithms: ["RS256"],
 });
@@ -29,7 +31,7 @@ const jwtCheck = expressjwt({
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: urlFront,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Headers"],
   })
@@ -46,7 +48,7 @@ app.post("/api/get-token", async (req, res) => {
         grant_type: "client_credentials",
         client_id: process.env.REACT_APP_CLIENT_ID,
         client_secret: process.env.REACT_APP_CLIENT_SECRET,
-        audience: "http://localhost:5173/",
+        audience: `${urlFront}/`,
       }),
     });
 
@@ -61,11 +63,11 @@ app.post("/api/get-token", async (req, res) => {
   }
 });
 
-app.get("/api/ticket", async (req, res) => {
+app.get("/api/ticket-amount", async (req, res) => {
   try {
-    const query = "SELECT * FROM ticket";
+    const query = "SELECT COUNT(*) AS amount FROM ticket";
     const data = await queryDatabase(query);
-    res.status(200).json(data);
+    res.status(200).json(data[0].amount);
   } catch (err) {
     res.status(500).json({ error: err500, details: err.message });
   }
@@ -108,6 +110,6 @@ app.post("/api/ticket", jwtCheck, async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`App running on port ${port}.`);
+app.listen(port, "0.0.0.0", () => {
+  console.log("Server running!");
 });

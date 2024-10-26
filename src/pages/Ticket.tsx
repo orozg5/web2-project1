@@ -5,6 +5,8 @@ import { ITicket } from "../interfaces/ITicket";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export const Ticket = () => {
+  const urlBack = "https://goroz-w2p1-back.onrender.com";
+
   const { id } = useParams();
   const [ticket, setTicket] = useState<ITicket>();
   const { isAuthenticated, user, loginWithPopup } = useAuth0();
@@ -12,7 +14,7 @@ export const Ticket = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/ticket/${id}`);
+        const res = await fetch(`${urlBack}/api/ticket/${id}`);
         const data = await res.json();
         setTicket(data[0]);
       } catch (err) {

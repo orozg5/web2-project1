@@ -11,9 +11,9 @@ createRoot(document.getElementById("root")!).render(
     <ChakraProvider theme={theme}>
       <Auth0Provider
         domain="goroz.eu.auth0.com"
-        clientId="vFyTkqn4hYQwmbgrxQgPDSh2ASAIlPT7"
+        clientId={import.meta.env.VITE_AUTH_CLIENT_ID}
         authorizationParams={{
-          redirect_uri: window.location.origin,
+          redirect_uri: "https://goroz-w2p1-front.onrender.com/",
         }}
       >
         <App />
